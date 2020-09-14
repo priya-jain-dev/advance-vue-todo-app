@@ -67,7 +67,7 @@
                         <v-btn depressed rounded color="secondary" class="ma-0" @click="create">Add</v-btn>
                       </template>
                     </v-text-field>
-                    <v-card v-if="tasks.length > 0">
+                    <v-card v-if="tasks.length > 0" flat>
                       <v-slide-y-transition class="py-0" group tag="v-list">
                         <template v-for="(task, i) in tasks">
                           <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
@@ -89,6 +89,9 @@
                           </v-list-item>
                         </template>
                       </v-slide-y-transition>
+                    </v-card>
+                    <v-card v-else flat>
+                      <img src="../assets/no_data.svg" alt="No data found" height="300">
                     </v-card>
                   </v-card>
                 </template>
@@ -113,7 +116,7 @@
                         <v-btn depressed rounded color="secondary" class="ma-0" @click="create">Add</v-btn>
                       </template>
                     </v-text-field>
-                    <v-card v-if="remainingTasks">
+                    <v-card v-if="remainingTasks" flat>
                       <v-slide-y-transition class="py-0" group tag="v-list">
                         <template v-for="(task, i) in tasks">
                           <template v-if="!task.done">
@@ -138,51 +141,55 @@
                         </template>
                       </v-slide-y-transition>
                     </v-card>
+                    <v-card v-else flat>
+                      <img src="../assets/no_data.svg" alt="No data found" height="300">
+                  </v-card>
                   </v-card>
                 </template>
 
                 <!-- Completed -->
                 <template v-if="index == 2">
-                  <v-card color="basil" flat>
-                    <v-card v-if="completedTasks">
-                      <v-slide-y-transition class="py-0" group tag="v-list">
-                        <template v-for="(task, i) in tasks">
-                          <template v-if="task.done">
-                            <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
-                            <v-list-item :key="`${i}-${task.text}`">
-                              <v-list-item-action>
-                                <v-checkbox
-                                  v-model="task.done"
-                                  :color="task.done && 'accent' || 'secondary'"
-                                >
-                                  <template v-slot:label>
-                                    <div
-                                      :class="task.done && 'grey--text text-decoration-line-through' || 'black--text'"
-                                      class="ml-4"
-                                      v-text="task.text"
-                                    ></div>
-                                  </template>
-                                </v-checkbox>
-                              </v-list-item-action>
-                              <v-spacer></v-spacer>
-                              <v-scroll-x-transition>
-                                <v-btn text color="accent"  @click="deleteItem(i)">
-                                  <v-icon color="accent">delete_outline</v-icon>
-                                </v-btn>
-                              </v-scroll-x-transition>
-                            </v-list-item>
-                          </template>
+                  <v-card v-if="completedTasks" flat>
+                    <v-slide-y-transition class="py-0" group tag="v-list">
+                      <template v-for="(task, i) in tasks">
+                        <template v-if="task.done">
+                          <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
+                          <v-list-item :key="`${i}-${task.text}`">
+                            <v-list-item-action >
+                              <v-checkbox
+                                v-model="task.done"
+                                :color="task.done && 'accent' || 'secondary'"
+                              >
+                                <template v-slot:label>
+                                  <div
+                                    :class="task.done && 'grey--text text-decoration-line-through' || 'black--text'"
+                                    class="ml-4"
+                                    v-text="task.text"
+                                  ></div>
+                                </template>
+                              </v-checkbox>
+                            </v-list-item-action>
+                            <v-spacer></v-spacer>
+                            <v-scroll-x-transition>
+                              <v-btn text color="accent"  @click="deleteItem(i)">
+                                <v-icon color="accent">delete_outline</v-icon>
+                              </v-btn>
+                            </v-scroll-x-transition>
+                          </v-list-item>
                         </template>
-                      </v-slide-y-transition>
-                      <v-btn
-                        color="secondary"
-                        class="ma-2 white--text float-right"
-                        @click="deleteAll"
-                        v-if="completedTasks"
-                      >
-                        <v-icon left>delete_outline</v-icon>delete all
-                      </v-btn>
-                    </v-card>
+                      </template>
+                    </v-slide-y-transition>
+                    <v-btn
+                      color="secondary"
+                      class="ma-2 white--text float-right"
+                      @click="deleteAll"
+                      v-if="completedTasks"
+                    >
+                      <v-icon left>delete_outline</v-icon>delete all
+                    </v-btn>
+                  </v-card>
+                  <v-card v-else flat>
+                    <img src="../assets/no_data.svg" alt="No data found" height="300">
                   </v-card>
                 </template>
               </v-tab-item>
@@ -216,13 +223,30 @@ export default {
         },
         {
           done: true,
-          text: "Eat food",
+          text: "Bug fix.",
         },
       ],
       task: null,
       icons: [mdiClose],
-      marker: true,
+      rules: {
+          required: value => !!value || 'Required.'
+      }
     };
+  },
+  watch: {
+    tasks: {
+      handler() { this.saveTasks() },
+      deep: true,
+    },
+  },
+  mounted() {
+    if (localStorage.getItem('tasks')) {
+      try {
+        this.tasks = JSON.parse(localStorage.getItem('tasks'));
+      } catch(e) {
+        localStorage.removeItem('tasks');
+      }
+    }
   },
   computed: {
     completedTasks() {
@@ -238,12 +262,16 @@ export default {
 
   methods: {
     create() {
+      if(!this.task){
+        return;
+      }
       this.tasks.push({
         done: false,
         text: this.task,
       });
-
       this.task = null;
+      this.saveTasks();
+      
     },
     clearMessage() {
       this.message = "";
@@ -251,9 +279,15 @@ export default {
     deleteAll(){
       const all_delete = this.tasks.filter((task) => task.done);
       all_delete.forEach(f => this.tasks.splice(this.tasks.findIndex(e => e.text === f.text),1));
+      this.saveTasks();
     },
     deleteItem(i){
-      this.tasks.splice(i);
+      this.tasks.splice(i,1);
+      this.saveTasks();
+    },
+    saveTasks(){
+      const parsed = JSON.stringify(this.tasks);
+      localStorage.setItem('tasks', parsed);
     }
   },
 };

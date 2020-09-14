@@ -10,6 +10,7 @@ const opts = {
         iconfont: 'md',
     },
     theme: {
+        // dark: true,
         themes: {
             light: {
                 primary: '#5A5EE7',
@@ -17,6 +18,11 @@ const opts = {
                 accent: '#8F8DA5',
                 error: '#b71c1c',
             },
+            // dark: {
+            //     primary: "#5A5EE7",
+            //     secondary: '#f57173',
+            //     accent: '#D2D2D2',
+            // },
         },
     }
 }
