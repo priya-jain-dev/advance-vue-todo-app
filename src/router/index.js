@@ -13,10 +13,5 @@ export default new Router({
         name: 'Todo',
         component: Todo
         },
-        // {
-        // path: '/:author',
-        // name: 'AuthorQuote',
-        // component: AuthorQuote
-        // },
     ]
 })
