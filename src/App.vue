@@ -1,5 +1,5 @@
 <template>
-  <v-app id="app">
+  <v-app id="app" class="grey--text text--darken-2">
     <router-view></router-view>
     <v-footer>
       <v-card flat tile width="100%" class="footer text-center">

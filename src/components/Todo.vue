@@ -1,9 +1,13 @@
 <template>
   <v-main>
     <v-container fluid>
+      <v-flex xs12 offset-xs10>
+        <input class="l " type="checkbox"  v-model="$vuetify.theme.dark">
+      </v-flex>
+      
       <v-row align="center" justify="center">
         <v-col cols="12" sm="8" md="6" class="ma-5">
-          <h1 class="todo-title">#todo</h1>
+          <h1 class="todo-title white--text">#todo</h1>
           <v-card class="pt-6 mt-5 card-view">
             <v-row>
               <v-col cols="8" class="ml-5">
@@ -71,22 +75,24 @@
                       <v-slide-y-transition class="py-0" group tag="v-list">
                         <template v-for="(task, i) in tasks">
                           <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
-                          <v-list-item :key="`${i}-${task.text}`">
-                            <v-list-item-action>
-                              <v-checkbox
-                                v-model="task.done"
-                                :color="task.done && 'accent' || 'secondary'"
-                              >
-                                <template v-slot:label>
-                                  <div
-                                    :class="task.done && 'grey--text text-decoration-line-through' || 'black--text'"
-                                    class="ml-4"
-                                    v-text="task.text"
-                                  ></div>
-                                </template>
-                              </v-checkbox>
-                            </v-list-item-action>
-                          </v-list-item>
+                            <v-hover v-slot:default="{ hover }" :key="`${i}-hover`">
+                              <v-list-item :key="`${i}-${task.text}`"  v-bind:class="[hover && 'on-hover']">
+                                <v-list-item-action>
+                                  <v-checkbox
+                                    v-model="task.done"
+                                    :color="task.done && 'accent' || 'secondary'"
+                                  >
+                                    <template v-slot:label>
+                                      <div 
+                                        v-bind:class="[task.done && 'text-decoration-line-through']"
+                                        class="ml-4"
+                                        v-text="task.text"
+                                      ></div>
+                                    </template>
+                                  </v-checkbox>
+                                </v-list-item-action>
+                              </v-list-item>
+                            </v-hover>
                         </template>
                       </v-slide-y-transition>
                     </v-card>
@@ -121,22 +127,24 @@
                         <template v-for="(task, i) in tasks">
                           <template v-if="!task.done">
                             <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
-                            <v-list-item :key="`${i}-${task.text}`">
-                              <v-list-item-action>
-                                <v-checkbox
-                                  v-model="task.done"
-                                  :color="task.done && 'accent' || 'secondary'"
-                                >
-                                  <template v-slot:label>
-                                    <div
-                                      :class="task.done && 'grey--text text-decoration-line-through' || 'black--text'"
-                                      class="ml-4"
-                                      v-text="task.text"
-                                    ></div>
-                                  </template>
-                                </v-checkbox>
-                              </v-list-item-action>
-                            </v-list-item>
+                            <v-hover v-slot:default="{ hover }" :key="`${i}-hover`">
+                              <v-list-item :key="`${i}-${task.text}`"  v-bind:class="[hover && 'on-hover']">
+                                <v-list-item-action>
+                                  <v-checkbox
+                                    v-model="task.done"
+                                    :color="task.done && 'accent' || 'secondary'"
+                                  >
+                                    <template v-slot:label>
+                                      <div
+                                        :class="task.done && 'text-decoration-line-through'"
+                                        class="ml-4"
+                                        v-text="task.text"
+                                      ></div>
+                                    </template>
+                                  </v-checkbox>
+                                </v-list-item-action>
+                              </v-list-item>
+                            </v-hover>
                           </template>
                         </template>
                       </v-slide-y-transition>
@@ -154,28 +162,30 @@
                       <template v-for="(task, i) in tasks">
                         <template v-if="task.done">
                           <v-divider v-if="i !== 0" :key="`${i}-divider`"></v-divider>
-                          <v-list-item :key="`${i}-${task.text}`">
-                            <v-list-item-action >
-                              <v-checkbox
-                                v-model="task.done"
-                                :color="task.done && 'accent' || 'secondary'"
-                              >
-                                <template v-slot:label>
-                                  <div
-                                    :class="task.done && 'grey--text text-decoration-line-through' || 'black--text'"
-                                    class="ml-4"
-                                    v-text="task.text"
-                                  ></div>
-                                </template>
-                              </v-checkbox>
-                            </v-list-item-action>
-                            <v-spacer></v-spacer>
-                            <v-scroll-x-transition>
-                              <v-btn text color="accent"  @click="deleteItem(i)">
-                                <v-icon color="accent">delete_outline</v-icon>
-                              </v-btn>
-                            </v-scroll-x-transition>
-                          </v-list-item>
+                          <v-hover v-slot:default="{ hover }" :key="`${i}-hover`">
+                            <v-list-item :key="`${i}-${task.text}`"  v-bind:class="[hover && 'on-hover']">
+                              <v-list-item-action >
+                                <v-checkbox
+                                  v-model="task.done"
+                                  :color="task.done && 'accent' || 'secondary'"
+                                >
+                                  <template v-slot:label>
+                                    <div
+                                      :class="task.done && 'text-decoration-line-through'"
+                                      class="ml-4"
+                                      v-text="task.text"
+                                    ></div>
+                                  </template>
+                                </v-checkbox>
+                              </v-list-item-action>
+                              <v-spacer></v-spacer>
+                              <v-scroll-x-transition>
+                                <v-btn text color="accent"  @click="deleteItem(i)">
+                                  <v-icon color="accent">delete_outline</v-icon>
+                                </v-btn>
+                              </v-scroll-x-transition>
+                            </v-list-item>
+                          </v-hover>
                         </template>
                       </template>
                     </v-slide-y-transition>
@@ -294,33 +304,98 @@ export default {
 </script>
 
 <style scoped>
-.todo-title {
-  font-style: normal;
-  font-weight: bold;
-  font-size: 36px;
-  line-height: 42px;
-  color: whitesmoke;
-}
-.card-view {
-  display: block;
-  width: 100%;
-  background-color: rgb(254, 254, 255);
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 150px;
-  margin: auto;
-  border-radius: 10px;
-  overflow: hidden;
-}
-.card_title {
-  font-size: 30px;
-  color: rgb(102, 106, 251);
-  letter-spacing: 0.8px;
-}
-.card-sub-title span {
-  display: block;
-  margin-top: 15px;
-  font-size: 20px;
-  color: rgb(168, 169, 202);
-  letter-spacing: 0.4px;
-  text-align: left;
-}
+  .todo-title {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 36px;
+    line-height: 42px;
+    color: whitesmoke;
+  }
+  .card-view {
+    display: block;
+    width: 100%;
+    /* background-color: rgb(254, 254, 255); */
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 15px 150px;
+    margin: auto;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .card_title {
+    font-size: 25px;
+    color: rgb(102, 106, 251);
+    letter-spacing: 0.8px;
+  }
+  .card-sub-title span {
+    display: block;
+    margin-top: 15px;
+    font-size: 20px;
+    color: rgb(168, 169, 202);
+    letter-spacing: 0.4px;
+    text-align: left;
+  }
+  .on-hover {
+    /* background-color: #EEEEEE; */
+      background-color: var(--v-accent-lighten2);
+  }
+  .l {
+    background-color: rgba(0,0,0,0.7);
+    border-radius: 0.75em;
+    box-shadow: 0.125em 0.125em 0 0.125em rgba(0,0,0,0.3) inset;
+    color: #fdea7b;
+    display: inline-flex;
+    align-items: center;
+    margin: auto;
+    padding: 0.15em;
+    width: 3em;
+    height: 1.5em;
+    transition: background-color 0.1s 0.3s ease-out, box-shadow 0.1s 0.3s ease-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  .l:before, .l:after {
+    content: "";
+    display: block;
+  }
+  .l:before {
+    background-color: #d7d7d7;
+    border-radius: 50%;
+    width: 1.2em;
+    height: 1.2em;
+    transition: background-color 0.1s 0.3s ease-out, transform 0.3s ease-out;
+    z-index: 1;
+  }
+  .l:after {
+    background:
+      linear-gradient(transparent 50%, rgba(0,0,0,0.15) 0) 0 50% / 50% 100%,
+      repeating-linear-gradient(90deg,#bbb 0,#bbb,#bbb 20%,#999 20%,#999 40%) 0 50% / 50% 100%,
+      radial-gradient(circle at 50% 50%,#888 25%, transparent 26%);
+    background-repeat: no-repeat;
+    border: 0.25em solid transparent;
+    border-left: 0.4em solid #d8d8d8;
+    border-right: 0 solid transparent;
+    transition: border-left-color 0.1s 0.3s ease-out, transform 0.3s ease-out;
+    transform: translateX(-22.5%);
+    transform-origin: 25% 50%;
+    width: 1.2em;
+    height: 1em;
+  }
+  /* Checked */
+  .l:checked {
+    background-color: rgba(0,0,0,0.45);
+    box-shadow: 0.125em 0.125em 0 0.125em rgba(0,0,0,0.1) inset;
+  }
+  .l:checked:before {
+    background-color: currentColor;
+    transform: translateX(125%)
+  }
+  .l:checked:after {
+    border-left-color: currentColor;
+    transform: translateX(-2.5%) rotateY(180deg);
+  }
+  /* Other States */
+  .l:focus {
+    /* Usually an anti-A11Y practice but set to remove an annoyance just for this demo */
+    outline: 0;
+  }
 </style>
